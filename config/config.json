@@ -1,11 +1,16 @@
 {
-  "screenWidth": 320,
-  "screenHeight":240,
+  "screenWidth": 840,
+  "screenHeight":680,
   "title": "test",
   "bgColor":{
     "r": 230,
     "g": 230,
     "b": 230,
     "a": 255
+  },
+  "dog": {
+    "img": "./img/dog.png",
+    "defaultSpeed": 3
   }
+
 }

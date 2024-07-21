@@ -3,26 +3,25 @@ package game
 import (
 	"game_by_ebiten/config"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Game struct {
-	input *Input
+	dog *Dog
 }
 
 func NewGame() *Game {
 	return &Game{
-		input: &Input{},
+		dog: NewDog(config.Cfg.Dog),
 	}
 }
 
 func (g *Game) Update() error {
-	g.input.Update()
+	g.dog.Update()
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, g.input.msg)
+	g.dog.Draw(screen)
 
 }
 
