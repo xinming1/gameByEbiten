@@ -8,16 +8,28 @@ import (
 )
 
 type Config struct {
-	ScreenWidth  int        `json:"screenWidth"`
-	ScreenHeight int        `json:"screenHeight"`
-	Title        string     `json:"title"`
-	BgColor      color.RGBA `json:"bgColor"`
-	Dog          *DogConfig `json:"dog"`
+	ScreenWidth  int           `json:"screenWidth"`
+	ScreenHeight int           `json:"screenHeight"`
+	Title        string        `json:"title"`
+	BgColor      color.RGBA    `json:"bgColor"`
+	Dog          *DogConfig    `json:"dogConfig"`
+	SwordConfig  *SwordConfig  `json:"swordConfig"`
+	GoblinConfig *GoblinConfig `json:"goblinConfig"`
 }
 
 type DogConfig struct {
 	Img          string  `json:"img"`
 	DefaultSpeed float64 `json:"defaultSpeed"`
+}
+
+type SwordConfig struct {
+	Img string `json:"img"`
+}
+
+type GoblinConfig struct {
+	Img    string  `json:"imgTemplate"`
+	ImgNum int     `json:"imgNum"`
+	Speed  float64 `json:"speed"`
 }
 
 var Cfg *Config

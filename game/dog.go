@@ -2,16 +2,10 @@ package game
 
 import (
 	"game_by_ebiten/config"
+	"game_by_ebiten/definition"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"log"
-)
-
-const (
-	up = iota
-	down
-	left
-	right
 )
 
 type Dog struct {
@@ -29,8 +23,8 @@ func NewDog(dogConfig *config.DogConfig) *Dog {
 		log.Fatal(err)
 	}
 	dog := &Dog{
-		direction:     left,
-		lastDirection: left,
+		direction:     definition.Left,
+		lastDirection: definition.Left,
 		image:         img,
 		width:         float64(img.Bounds().Dx()),
 		height:        float64(img.Bounds().Dy()),
@@ -46,7 +40,7 @@ func NewDog(dogConfig *config.DogConfig) *Dog {
 func (d *Dog) Draw(screen *ebiten.Image) {
 
 	op := &ebiten.DrawImageOptions{}
-	if d.direction != left {
+	if d.direction != definition.Left {
 		op.GeoM.Scale(-1, 1)
 		d.lastDirection = d.direction
 	}
@@ -61,10 +55,10 @@ func (d *Dog) Update() {
 	switch {
 	case ebiten.IsKeyPressed(ebiten.KeyLeft):
 		d.x -= d.speed
-		d.direction = left
+		d.direction = definition.Left
 	case ebiten.IsKeyPressed(ebiten.KeyRight):
 		d.x += d.speed
-		d.direction = right
+		d.direction = definition.Right
 	case ebiten.IsKeyPressed(ebiten.KeyUp):
 		d.y -= d.speed
 	case ebiten.IsKeyPressed(ebiten.KeyDown):

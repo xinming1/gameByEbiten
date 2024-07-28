@@ -8,9 +8,17 @@
     "b": 230,
     "a": 255
   },
-  "dog": {
+  "dogConfig": {
     "img": "./img/dog.png",
     "defaultSpeed": 3
+  },
+  "swordConfig": {
+    "img": "./img/sword1.png"
+  },
+  "goblinConfig": {
+    "imgTemplate": "./img/goblin/run/smallRun_%03d.png",
+    "imgNum": 40,
+    "speed": 1
   }
 
 }
