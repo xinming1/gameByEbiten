@@ -6,30 +6,34 @@ import (
 )
 
 type Game struct {
-	dog    *Dog
-	sword  *Sword
-	goblin *Goblin
+	dog   *Dog
+	sword *Sword
+	//goblin        *Goblin
+	goblinManager *GoblinManager
 }
 
 func NewGame() *Game {
-	return &Game{
+	game := &Game{
 		//dog:   NewDog(config.Cfg.Dog),
-		sword:  NewSword(config.Cfg.SwordConfig),
-		goblin: NewGoblin(config.Cfg.GoblinConfig),
+		sword: NewSword(config.Cfg.SwordConfig),
 	}
+	game.goblinManager = NewGoblinManager(game)
+	return game
 }
 
 func (g *Game) Update() error {
 	//g.dog.Update()
 	g.sword.Update()
-	g.goblin.Update()
+	//g.goblin.Update()
+	g.goblinManager.Update()
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	//g.dog.Draw(screen)
 	g.sword.Draw(screen)
-	g.goblin.Draw(screen)
+	//g.goblin.Draw(screen)
+	g.goblinManager.Draw(screen)
 
 }
 
