@@ -12,8 +12,8 @@ func TestResize(t *testing.T) {
 
 func TestBatchResize(t *testing.T) {
 	for i := 0; i < 40; i++ {
-		inputPath := fmt.Sprintf("../img/goblin/run/run_%03d.png", i)
-		outputPath := fmt.Sprintf("../img/goblin/run/smallRun_%03d.png", i)
+		inputPath := fmt.Sprintf("../img/goblin/died/died_%03d.png", i)
+		outputPath := fmt.Sprintf("../img/goblin/died/smallDied_%03d.png", i)
 		resizeImg2(inputPath, outputPath)
 	}
 }

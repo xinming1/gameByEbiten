@@ -16,8 +16,14 @@
     "img": "./img/sword1.png"
   },
   "goblinConfig": {
-    "imgTemplate": "./img/goblin/run/smallRun_%03d.png",
-    "imgNum": 40,
+    "runImg": {
+      "imgTemplate": "./img/goblin/run/smallRun_%03d.png",
+      "imgNum": 40
+    },
+    "diedImg": {
+      "imgTemplate": "./img/goblin/died/smallDied_%03d.png",
+      "imgNum": 40
+    },
     "speed": 1
   }
 

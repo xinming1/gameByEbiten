@@ -27,9 +27,14 @@ type SwordConfig struct {
 }
 
 type GoblinConfig struct {
-	Img    string  `json:"imgTemplate"`
-	ImgNum int     `json:"imgNum"`
-	Speed  float64 `json:"speed"`
+	RunImg  ImgConfig `json:"runImg"`
+	DiedImg ImgConfig `json:"diedImg"`
+	Speed   float64   `json:"speed"`
+}
+
+type ImgConfig struct {
+	Img    string `json:"imgTemplate"`
+	ImgNum int    `json:"imgNum"`
 }
 
 var Cfg *Config

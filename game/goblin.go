@@ -17,33 +17,46 @@ type GoblinManager struct {
 	count     int
 	game      *Game
 	runImage  []*ebiten.Image
+	diedImage []*ebiten.Image
 }
 
 type Goblin struct {
-	id        string
-	x, y      float64
-	w, h      float64
-	speed     float64
-	idx       int
-	direction int
+	id              string
+	x, y            float64
+	w, h            float64
+	speed           float64
+	runIdx, diedIdx int
+	direction       int
+	die             bool
 }
 
 func NewGoblinManager(game *Game) *GoblinManager {
-	var imgList = make([]*ebiten.Image, 0)
-	for i := 0; i < config.Cfg.GoblinConfig.ImgNum; i++ {
-		tmpImg := fmt.Sprintf(config.Cfg.GoblinConfig.Img, i)
+	var runImgList = make([]*ebiten.Image, 0)
+	var diedImgList = make([]*ebiten.Image, 0)
+	for i := 0; i < config.Cfg.GoblinConfig.RunImg.ImgNum; i++ {
+		tmpImg := fmt.Sprintf(config.Cfg.GoblinConfig.RunImg.Img, i)
 		img, _, err := ebitenutil.NewImageFromFile(tmpImg)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		imgList = append(imgList, img)
+		runImgList = append(runImgList, img)
+	}
+	for i := 0; i < config.Cfg.GoblinConfig.DiedImg.ImgNum; i++ {
+		tmpImg := fmt.Sprintf(config.Cfg.GoblinConfig.DiedImg.Img, i)
+		img, _, err := ebitenutil.NewImageFromFile(tmpImg)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		diedImgList = append(diedImgList, img)
 	}
 
 	goblinManager := &GoblinManager{
 		goblinMap: make(map[string]*Goblin),
 		game:      game,
-		runImage:  imgList,
+		runImage:  runImgList,
+		diedImage: diedImgList,
 	}
 	return goblinManager
 }
@@ -58,11 +71,11 @@ func (goblinManager *GoblinManager) addGoblin() {
 func NewGoblin(w, h, speed float64) *Goblin {
 
 	goblin := &Goblin{
-		id:    uuid.NewV4().String(),
-		w:     w,
-		h:     h,
-		idx:   0,
-		speed: speed,
+		id:     uuid.NewV4().String(),
+		w:      w,
+		h:      h,
+		runIdx: 0,
+		speed:  speed,
 	}
 	// 不超过屏幕的随机位置
 	goblin.x = rand.Float64() * float64(config.Cfg.ScreenWidth)
@@ -73,29 +86,36 @@ func NewGoblin(w, h, speed float64) *Goblin {
 
 func (goblinManager *GoblinManager) Update() {
 	for _, goblin := range goblinManager.goblinMap {
-		goblin.Update()
 		if goblin.isHit(goblinManager.game.sword) {
+			goblin.die = true
+		}
+		if goblin.isDied() {
 			delete(goblinManager.goblinMap, goblin.id)
 		}
+		goblin.Update()
+
 	}
 	goblinManager.addGoblin()
 }
 
 func (goblinManager *GoblinManager) Draw(screen *ebiten.Image) {
 	for _, goblin := range goblinManager.goblinMap {
-		goblin.Draw(screen, goblinManager.runImage)
+		goblin.Draw(screen, goblinManager.runImage, goblinManager.diedImage)
 	}
 }
 
 func (goblin *Goblin) Update() {
-	goblin.idx++
-	if goblin.idx == config.Cfg.GoblinConfig.ImgNum-1 {
-		goblin.idx = 0
+	if goblin.die {
+		if goblin.diedIdx == config.Cfg.GoblinConfig.DiedImg.ImgNum-1 {
+			return
+		}
+		goblin.diedIdx++
+		return
 	}
 	goblin.run()
 
 }
-func (goblin *Goblin) Draw(screen *ebiten.Image, imgList []*ebiten.Image) {
+func (goblin *Goblin) Draw(screen *ebiten.Image, runImgList, diedImgList []*ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	if goblin.direction != definition.Left {
 		op.GeoM.Scale(-1, 1)
@@ -103,10 +123,18 @@ func (goblin *Goblin) Draw(screen *ebiten.Image, imgList []*ebiten.Image) {
 
 	op.GeoM.Translate(goblin.x, goblin.y)
 
-	screen.DrawImage(imgList[goblin.idx], op)
+	if goblin.die {
+		screen.DrawImage(diedImgList[goblin.diedIdx], op)
+	} else {
+		screen.DrawImage(runImgList[goblin.runIdx], op)
+	}
 }
 
 func (goblin *Goblin) run() {
+	goblin.runIdx++
+	if goblin.runIdx == config.Cfg.GoblinConfig.RunImg.ImgNum-1 {
+		goblin.runIdx = 0
+	}
 	x, y := ebiten.CursorPosition()
 	if goblin.x < float64(x) {
 		goblin.x += goblin.speed
@@ -122,7 +150,13 @@ func (goblin *Goblin) run() {
 	}
 
 }
+
+func (goblin *Goblin) isDied() bool {
+	return goblin.diedIdx == config.Cfg.GoblinConfig.DiedImg.ImgNum
+}
+
 func (goblin *Goblin) isHit(sword *Sword) bool {
+	var hit bool
 	// 计算 sword 的四个边界坐标
 	r := math.Sqrt(sword.w*sword.w+sword.h*sword.h) / 2
 	angle := math.Atan2(sword.h, sword.w)
@@ -139,8 +173,9 @@ func (goblin *Goblin) isHit(sword *Sword) bool {
 
 	// 判断敌人的边界是否与 sword 的边界相交
 	if x1 <= ex2 && x2 >= ex1 && y1 <= ey4 && y4 <= ey1 {
-		return true
+		hit = true
 	}
 
-	return false
+	goblin.die = hit
+	return hit
 }
