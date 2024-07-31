@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	uuid "github.com/satori/go.uuid"
 	"log"
+	"math"
 	"math/rand"
 )
 
@@ -73,6 +74,9 @@ func NewGoblin(w, h, speed float64) *Goblin {
 func (goblinManager *GoblinManager) Update() {
 	for _, goblin := range goblinManager.goblinMap {
 		goblin.Update()
+		if goblin.isHit(goblinManager.game.sword) {
+			delete(goblinManager.goblinMap, goblin.id)
+		}
 	}
 	goblinManager.addGoblin()
 }
@@ -117,4 +121,26 @@ func (goblin *Goblin) run() {
 		goblin.y -= goblin.speed
 	}
 
+}
+func (goblin *Goblin) isHit(sword *Sword) bool {
+	// 计算 sword 的四个边界坐标
+	r := math.Sqrt(sword.w*sword.w+sword.h*sword.h) / 2
+	angle := math.Atan2(sword.h, sword.w)
+	x1 := sword.x + r*math.Cos(sword.theta+angle)
+	y1 := sword.y + r*math.Sin(sword.theta+angle)
+	x2 := sword.x + r*math.Cos(sword.theta-angle)
+	y4 := sword.y - r*math.Sin(sword.theta-angle)
+
+	// 计算敌人的四个边界坐标
+	ex1 := goblin.x - goblin.w/2
+	ey1 := goblin.y - goblin.h/2
+	ex2 := goblin.x + goblin.w/2
+	ey4 := goblin.y + goblin.h/2
+
+	// 判断敌人的边界是否与 sword 的边界相交
+	if x1 <= ex2 && x2 >= ex1 && y1 <= ey4 && y4 <= ey1 {
+		return true
+	}
+
+	return false
 }
