@@ -25,16 +25,13 @@ func (g *Game) Update() error {
 	//g.dog.Update()
 	g.sword.Update()
 	//g.goblin.Update()
-	g.goblinManager.Update()
+	g.goblinManager.Update(g.sword.x, g.sword.y)
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	//g.dog.Draw(screen)
-	g.sword.Draw(screen)
-	//g.goblin.Draw(screen)
 	g.goblinManager.Draw(screen)
-
+	g.sword.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

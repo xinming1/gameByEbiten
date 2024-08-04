@@ -2,6 +2,7 @@ package game
 
 import (
 	"game_by_ebiten/config"
+	"game_by_ebiten/logger"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"log"
@@ -48,11 +49,11 @@ func (sword *Sword) Update() {
 }
 func (sword *Sword) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
-	//op.GeoM.Scale(0.7, 0.7)
 	op.GeoM.Translate(-sword.w/2.0, -sword.h)
 	op.GeoM.Rotate(sword.theta)
 	op.GeoM.Translate(sword.w/2.0, sword.h)
 
+	logger.Debug("sword x:%f,y:%f", sword.x, sword.y)
 	op.GeoM.Translate(sword.x, sword.y)
 
 	screen.DrawImage(sword.image, op)
