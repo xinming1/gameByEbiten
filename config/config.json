@@ -1,6 +1,6 @@
 {
-  "screenWidth": 840,
-  "screenHeight":680,
+  "screenWidth": 640,
+  "screenHeight":640,
   "title": "test",
   "bgColor":{
     "r": 230,
@@ -25,6 +25,7 @@
       "imgNum": 40
     },
     "speed": 1
-  }
+  },
+  "bgImg": "./img/grass.png"
 
 }

@@ -3,9 +3,12 @@ package game
 import (
 	"game_by_ebiten/config"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"log"
 )
 
 type Game struct {
+	bgImg *ebiten.Image
 	dog   *Dog
 	sword *Sword
 	//goblin        *Goblin
@@ -18,6 +21,12 @@ func NewGame() *Game {
 		sword: NewSword(config.Cfg.SwordConfig),
 	}
 	game.goblinManager = NewGoblinManager(game)
+	bgImg, _, err := ebitenutil.NewImageFromFile(config.Cfg.BgImg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	game.bgImg = bgImg
+
 	return game
 }
 
@@ -30,6 +39,11 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	i := config.Cfg.ScreenWidth / g.bgImg.Bounds().Dx()
+	j := config.Cfg.ScreenHeight / g.bgImg.Bounds().Dy()
+	op.GeoM.Scale(float64(i), float64(j))
+	screen.DrawImage(g.bgImg, op)
 	g.goblinManager.Draw(screen)
 	g.sword.Draw(screen)
 }

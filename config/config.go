@@ -12,6 +12,7 @@ type Config struct {
 	ScreenHeight int           `json:"screenHeight"`
 	Title        string        `json:"title"`
 	BgColor      color.RGBA    `json:"bgColor"`
+	BgImg        string        `json:"bgImg"`
 	Dog          *DogConfig    `json:"dogConfig"`
 	SwordConfig  *SwordConfig  `json:"swordConfig"`
 	GoblinConfig *GoblinConfig `json:"goblinConfig"`

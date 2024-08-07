@@ -9,7 +9,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	uuid "github.com/satori/go.uuid"
 	"log"
-	"math"
 	"math/rand"
 )
 
@@ -161,27 +160,28 @@ func (goblin *Goblin) isDied() bool {
 }
 
 func (goblin *Goblin) isHit(sword *Sword) bool {
-	var hit bool
-	// 计算 sword 的四个边界坐标
-	r := math.Sqrt(sword.w*sword.w+sword.h*sword.h) / 2
-	angle := math.Atan2(sword.h, sword.w)
-	x1 := sword.x + r*math.Cos(sword.theta+angle)
-	y1 := sword.y + r*math.Sin(sword.theta+angle)
-	x2 := sword.x + r*math.Cos(sword.theta-angle)
-	y4 := sword.y - r*math.Sin(sword.theta-angle)
-
-	// 计算敌人的四个边界坐标
-	ex1 := goblin.x - goblin.w/2
-	ey1 := goblin.y - goblin.h/2
-	ex2 := goblin.x + goblin.w/2
-	ey4 := goblin.y + goblin.h/2
-
-	if checkRectangleOverlap() {
-		goblin.die = true
-		return true
-	} else {
-		return false
-	}
+	//var hit bool
+	//// 计算 sword 的四个边界坐标
+	//r := math.Sqrt(sword.w*sword.w+sword.h*sword.h) / 2
+	//angle := math.Atan2(sword.h, sword.w)
+	//x1 := sword.x + r*math.Cos(sword.theta+angle)
+	//y1 := sword.y + r*math.Sin(sword.theta+angle)
+	//x2 := sword.x + r*math.Cos(sword.theta-angle)
+	//y4 := sword.y - r*math.Sin(sword.theta-angle)
+	//
+	//// 计算敌人的四个边界坐标
+	//ex1 := goblin.x - goblin.w/2
+	//ey1 := goblin.y - goblin.h/2
+	//ex2 := goblin.x + goblin.w/2
+	//ey4 := goblin.y + goblin.h/2
+	//
+	//if checkRectangleOverlap() {
+	//	goblin.die = true
+	//	return true
+	//} else {
+	//	return false
+	//}
+	return true
 }
 
 func checkRectangleOverlap(ax1, ay1, ax2, ay2, ax3, ay3, ax4, ay4, bx1, by1, bx2, by2, bx3, by3, bx4, by4 float64) bool {
